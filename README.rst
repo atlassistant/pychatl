@@ -47,7 +47,7 @@ From the code
   from pychatl import parse
 
   result = parse("""
-  # chatl is really easy to understand.
+  # pychatl is really easy to understand.
   #
   # You can defines:
   #   - Intents
