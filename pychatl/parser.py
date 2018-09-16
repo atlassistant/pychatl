@@ -46,8 +46,8 @@ def parse(input_string, prefix=''):
 
   """
 
-  visitor = ChatlVisitor(prefix)
   tree = parser.parse(input_string)
+  visitor = ChatlVisitor(prefix)
 
   visit_parse_tree(tree, visitor)
 
