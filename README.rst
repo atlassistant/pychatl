@@ -31,6 +31,12 @@ source
   $ cd pychatl
   $ python setup.py install
 
+or
+
+.. code-block:: bash
+
+  $ pip install -e .
+
 Usage
 -----
 
@@ -96,3 +102,11 @@ From the code
     nine o clock
     twenty past five
   """)
+
+Testing
+-------
+
+.. code-block:: bash
+
+  $ cd tests/
+  $ python -m unittest -v
