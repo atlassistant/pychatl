@@ -34,9 +34,9 @@ def snips(dataset, options={}):
       d = entities.get(entity, {}).get('variants', {}).get(variant, [])
 
     if key not in entities_idx or entities_idx[key] >= len(d):
-      entities_idx[key] = -1
-    
-    entities_idx[key] += 1
+      entities_idx[key] = 0
+    else:
+      entities_idx[key] += 1
 
     return d[entities_idx[key]].get('value')
 
@@ -105,7 +105,7 @@ def snips(dataset, options={}):
       }
 
   # And then intents
-  # For intents, we need to generate all permutations for synonyms and only synonyms
+  # For intents, we need to generate all permutations for synonyms
 
   for (name, intent) in intents.items():
     intent_data = intent.get('data', [])
