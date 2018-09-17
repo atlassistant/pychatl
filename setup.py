@@ -20,9 +20,9 @@ setup(
   install_requires=[
     'Arpeggio==1.9.0',
   ],
-  # entry_points={
-  #   'console_scripts': [
-  #     'pytlas = pytlas.cli:main',
-  #   ]
-  # },
+  entry_points={
+    'console_scripts': [
+      'pychatl = pychatl.cli:main',
+    ]
+  },
 )

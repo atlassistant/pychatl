@@ -18,19 +18,19 @@ prop_value = r'[A-Za-z_/]*'
 prop = prop_key "=" prop_value indent r'[,]?' indent
 props = "(" prop+ ")"
 
-entity_data = indent (synonym_alias / sentence) EOL
+entity_data = indent (synonym_alias / sentence) EOL?
 entity_definition = "@[" element_name "]" props? EOL
   entity_data+
 
-intent_data = indent (entity_alias / synonym_alias / sentence)+ EOL
+intent_data = indent (entity_alias / synonym_alias / sentence)+ EOL?
 intent_definition = "%[" element_name "]" props? EOL
   intent_data+
 
-synonym_data = indent sentence+ EOL
+synonym_data = indent sentence+ EOL?
 synonym_definition = "~[" element_name "]" props? EOL
   synonym_data+
 
-comment = "#" sentence? EOL
+comment = "#" sentence? EOL?
 
 """, 'root', skipws=False)
 

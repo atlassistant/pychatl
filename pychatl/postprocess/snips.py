@@ -33,11 +33,11 @@ def snips(dataset, options={}):
     if variant:
       d = entities.get(entity, {}).get('variants', {}).get(variant, [])
 
-    if key not in entities_idx or entities_idx[key] >= len(d):
+    if key not in entities_idx or entities_idx[key] >= (len(d) - 1):
       entities_idx[key] = 0
     else:
       entities_idx[key] += 1
-
+    
     return d[entities_idx[key]].get('value')
 
   def get_sentence_value(raw_data):

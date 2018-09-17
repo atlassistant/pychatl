@@ -43,7 +43,9 @@ Usage
 From the terminal
 ~~~~~~~~~~~~~~~~~
 
-*TODO*
+.. code-block:: bash
+
+  $ pychatl .\example\forecast.dsl .\example\lights.dsl -a snips -o '{ \"language\": \"en\" }'
 
 From the code
 ~~~~~~~~~~~~~

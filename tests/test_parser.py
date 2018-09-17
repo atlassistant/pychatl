@@ -115,8 +115,7 @@ class ParserTests(unittest.TestCase):
     result = parse("""
 ~[new york](some=prop, something=else)
   nyc
-  the big apple
-""")
+  the big apple""")
 
     self.assertEqual(1, len(result['synonyms']))
     self.assertTrue('new york' in result['synonyms'])
