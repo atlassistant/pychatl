@@ -23,7 +23,7 @@ class SnipsTests(unittest.TestCase):
   new york
   los angeles
 
-@[date](type=snips/datetime)
+@[date](snips:type=snips/datetime)
   tomorrow
 
 ~[greet]
@@ -82,7 +82,7 @@ class SnipsTests(unittest.TestCase):
   kitchen
   bedroom
 
-@[date](type=snips/datetime)
+@[date](snips:type=snips/datetime)
   tomorrow
   on tuesday
 
@@ -155,6 +155,6 @@ class SnipsTests(unittest.TestCase):
 
     self.assertEqual('en', snips_data.get('language'))
 
-    snips_data = snips(result, { 'language' : 'fr' })
+    snips_data = snips(result, language='fr')
 
     self.assertEqual('fr', snips_data.get('language'))

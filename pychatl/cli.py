@@ -32,6 +32,6 @@ def main():
     options = {}
 
   if args.adapter:
-    data = getattr(postprocess, args.adapter)(data, options)
+    data = getattr(postprocess, args.adapter)(data, **options)
 
   print (json.dumps(data, indent=2 if args.pretty else None))

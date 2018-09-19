@@ -17,7 +17,7 @@ def is_builtin_entity(name):
   
   return False
 
-def snips(dataset, options={}):
+def snips(dataset, **options):
 
   entities_idx = {}
 
@@ -52,7 +52,7 @@ def snips(dataset, options={}):
       return {
         'text': get_entity_or_variant_value(v, raw_data.get('variant')),
         'slot_name': v,
-        'entity': entities.get(v, {}).get('props', {}).get('type', v),
+        'entity': entities.get(v, {}).get('props', {}).get('snips:type', v),
       }
 
     return {}
@@ -72,7 +72,7 @@ def snips(dataset, options={}):
 
     entity_data = entity.get('data', []) + variants_data
     props = entity.get('props', {})
-    prop_type = props.get('type')
+    prop_type = props.get('snips:type')
 
     if is_builtin_entity(prop_type):
       training_dataset['entities'][prop_type] = {}

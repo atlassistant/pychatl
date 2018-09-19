@@ -90,9 +90,9 @@ From the code
 
   # Entities and intents can define arbitrary properties that will be made available
   # to generators.
-  # For snips, `type` and `extensible` are used for example.
+  # For snips, `snips:type` and `extensible` are used for example.
 
-  @[date](type=snips/datetime)
+  @[date](snips:type=snips/datetime)
     tomorrow
     today
 
@@ -104,6 +104,25 @@ From the code
     nine o clock
     twenty past five
   """)
+
+  # Now you got a parsed dataset so you may want to process it for a specific NLU engines
+
+  from pychatl.postprocess import snips
+
+  snips_dataset = snips(result) # Or give options with `snips(result, language='en')`
+
+  # And now you got your dataset ready to be fitted within snips-nlu!
+
+Adapters
+--------
+
+For now, only the `snips adapter <https://github.com/snipsco/snips-nlu>`_ has been done. Here is a list of adapters and their respective properties:
+
++---------+-------------------------------------------+------------------------------------------------------+
+| adapter | type *Specific type of the entity to use* | extensible *Are values outside of training allowed?* |
++=========+===========================================+======================================================+
+| snips   | ✔️ with `snips:type`                      | ✔️                                                   |
++---------+-------------------------------------------+------------------------------------------------------+
 
 Testing
 -------
