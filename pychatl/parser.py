@@ -13,8 +13,8 @@ element_name = r'[^]]+'
 entity_alias = "@[" element_name "]"
 synonym_alias = "~[" element_name "]"
 
-prop_key = r'[A-Za-z_:]*'
-prop_value = r'[A-Za-z_/]*'
+prop_key = r'[^=^\n^\r\n]*'
+prop_value = r'[^,^)^\n^\r\n]*'
 prop = prop_key "=" prop_value indent r'[,]?' indent
 props = "(" prop+ ")"
 

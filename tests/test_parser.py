@@ -1,52 +1,51 @@
-import unittest
+from sure import expect
 from pychatl import parse
 
-class ParserTests(unittest.TestCase):
-
-  def test_parse_intents(self):
+class TestParser:
+  
+  def test_it_should_parse_intents(self):
     result = parse("""
 %[get_forecast](some=prop, something=else)
   will it rain in @[city]
   ~[greet] what's the weather like in @[city#variant]
 """)
 
-    self.assertEqual(1, len(result['intents']))
-    self.assertTrue('get_forecast' in result['intents'])
+    expect(result['intents']).to.have.length_of(1)
+    expect(result['intents']).to.have.key('get_forecast')
 
     intent = result['intents']['get_forecast']
 
-    self.assertEqual(2, len(intent['props']))
-    self.assertTrue('some' in intent['props'])
-    self.assertTrue('something' in intent['props'])
-    self.assertEqual('prop', intent['props']['some'])
-    self.assertEqual('else', intent['props']['something'])
+    expect(intent['props']).to.have.length_of(2)
+    expect(intent['props']).to.have.key('some')
+    expect(intent['props']).to.have.key('something')
+    expect(intent['props']['some']).to.equal('prop')
+    expect(intent['props']['something']).to.equal('else')
 
-    self.assertEqual(2, len(intent['data']))
+    expect(intent['data']).to.have.length_of(2)
 
     data = intent['data'][0]
 
-    self.assertEqual(2, len(data))
-    self.assertEqual('text', data[0]['type'])
-    self.assertEqual('will it rain in ', data[0]['value'])
+    expect(data).to.have.length_of(2)
 
-    self.assertEqual('entity', data[1]['type'])
-    self.assertEqual('city', data[1]['value'])
-    self.assertIsNone(data[1]['variant'])
+    expect(data[0]['type']).to.equal('text')
+    expect(data[0]['value']).to.equal('will it rain in ')
+    expect(data[1]['type']).to.equal('entity')
+    expect(data[1]['value']).to.equal('city')
+    expect(data[1]['variant']).to.be.none
 
     data = intent['data'][1]
 
-    self.assertEqual(3, len(data))
-    self.assertEqual('synonym', data[0]['type'])
-    self.assertEqual('greet', data[0]['value'])
+    expect(data).to.have.length_of(3)
 
-    self.assertEqual('text', data[1]['type'])
-    self.assertEqual(" what's the weather like in ", data[1]['value'])   
-
-    self.assertEqual('entity', data[2]['type'])
-    self.assertEqual('city', data[2]['value'])
-    self.assertEqual('variant', data[2]['variant'])
-
-  def test_parse_entities(self):
+    expect(data[0]['type']).to.equal('synonym')
+    expect(data[0]['value']).to.equal('greet')
+    expect(data[1]['type']).to.equal('text')
+    expect(data[1]['value']).to.equal(" what's the weather like in ")
+    expect(data[2]['type']).to.equal('entity')
+    expect(data[2]['value']).to.equal('city')
+    expect(data[2]['variant']).to.equal('variant')
+  
+  def test_it_should_parse_entities(self):
     result = parse("""
 @[city](some=prop, something=else)
   paris
@@ -54,31 +53,29 @@ class ParserTests(unittest.TestCase):
   ~[new york]
 """)
 
-    self.assertEqual(1, len(result['entities']))
-    self.assertTrue('city' in result['entities'])
-
+    expect(result['entities']).to.have.length_of(1)
+    expect(result['entities']).to.have.key('city')
+    
     entity = result['entities']['city']
 
-    self.assertEqual(2, len(entity['props']))
-    self.assertTrue('some' in entity['props'])
-    self.assertTrue('something' in entity['props'])
-    self.assertEqual('prop', entity['props']['some'])
-    self.assertEqual('else', entity['props']['something'])
+    expect(entity['props']).to.have.length_of(2)
+    expect(entity['props']).to.have.key('some')
+    expect(entity['props']).to.have.key('something')
+    expect(entity['props']['some']).to.equal('prop')
+    expect(entity['props']['something']).to.equal('else')
 
     data = entity['data']
 
-    self.assertEqual(3, len(data))
+    expect(data).to.have.length_of(3)
 
-    self.assertEqual('text', data[0]['type'])
-    self.assertEqual('paris', data[0]['value'])
+    expect(data[0]['type']).to.equal('text')
+    expect(data[0]['value']).to.equal('paris')
+    expect(data[1]['type']).to.equal('text')
+    expect(data[1]['value']).to.equal('rouen')
+    expect(data[2]['type']).to.equal('synonym')
+    expect(data[2]['value']).to.equal('new york')
 
-    self.assertEqual('text', data[1]['type'])
-    self.assertEqual('rouen', data[1]['value'])
-
-    self.assertEqual('synonym', data[2]['type'])
-    self.assertEqual('new york', data[2]['value'])
-
-  def test_parse_entities_variants(self):
+  def test_it_should_parse_entities_variants(self):
     result = parse("""
 @[city](some=prop, something=else)
   paris
@@ -90,55 +87,74 @@ class ParserTests(unittest.TestCase):
   another one
 """)
 
-    self.assertEqual(1, len(result['entities']))
+    expect(result['entities']).to.have.length_of(1)
 
     entity = result['entities']['city']
 
-    self.assertEqual(1, len(entity['variants']))
-    self.assertTrue('variant' in entity['variants'])
-    self.assertEqual(3, len(entity['props']))
-    self.assertTrue('some' in entity['props'])
-    self.assertTrue('something' in entity['props'])
-    self.assertTrue('var' in entity['props'])
+    expect(entity['variants']).to.have.length_of(1)
+    expect(entity['variants']).to.have.key('variant')
 
+    expect(entity['props']).to.have.length_of(3)
+    expect(entity['props']).to.have.key('some')
+    expect(entity['props']).to.have.key('something')
+    expect(entity['props']).to.have.key('var')
+    expect(entity['props']['some']).to.equal('prop')
+    expect(entity['props']['something']).to.equal('else')
+    expect(entity['props']['var']).to.equal('prop')
+    
     variant = entity['variants']['variant']
 
-    self.assertEqual(2, len(variant))
+    expect(variant).to.have.length_of(2)
 
-    self.assertEqual('text', variant[0]['type'])
-    self.assertEqual('one variant', variant[0]['value'])
-
-    self.assertEqual('text', variant[1]['type'])
-    self.assertEqual('another one', variant[1]['value'])
-
-  def test_parse_synonyms(self):
+    expect(variant[0]['type']).to.equal('text')
+    expect(variant[0]['value']).to.equal('one variant')
+    expect(variant[1]['type']).to.equal('text')
+    expect(variant[1]['value']).to.equal('another one')
+  
+  def test_it_should_parse_synonyms(self):
     result = parse("""
 ~[new york](some=prop, something=else)
   nyc
   the big apple""")
 
-    self.assertEqual(1, len(result['synonyms']))
-    self.assertTrue('new york' in result['synonyms'])
+    expect(result['synonyms']).to.have.length_of(1)
+    expect(result['synonyms']).to.have.key('new york')
 
     synonym = result['synonyms']['new york']
 
-    self.assertEqual(2, len(synonym['props']))
-    self.assertTrue('some' in synonym['props'])
-    self.assertTrue('something' in synonym['props'])
-    self.assertEqual('prop', synonym['props']['some'])
-    self.assertEqual('else', synonym['props']['something'])
+    expect(synonym['props']).to.have.length_of(2)
+    expect(synonym['props']).to.have.key('some')
+    expect(synonym['props']).to.have.key('something')
+    expect(synonym['props']['some']).to.equal('prop')
+    expect(synonym['props']['something']).to.equal('else')
 
-    self.assertEqual(2, len(synonym['data']))
+    expect(synonym['data']).to.have.length_of(2)
 
     data = synonym['data']
 
-    self.assertEqual('text', data[0]['type'])
-    self.assertEqual('nyc', data[0]['value'])
+    expect(data[0]['type']).to.equal('text')
+    expect(data[0]['value']).to.equal('nyc')
+    expect(data[1]['type']).to.equal('text')
+    expect(data[1]['value']).to.equal('the big apple')
+  
+  def test_it_should_parse_complex_properties(self):
+    result = parse("""
+@[an entity](with complex=property value, and:maybe=an0 ther @)
+  a value
+""")
 
-    self.assertEqual('text', data[1]['type'])
-    self.assertEqual('the big apple', data[1]['value'])
+    expect(result['entities']).to.have.length_of(1)
+    expect(result['entities']).to.have.key('an entity')
 
-  def test_parse_comments(self):
+    entity = result['entities']['an entity']
+
+    expect(entity['props']).to.have.length_of(2)
+    expect(entity['props']).to.have.key('with complex')
+    expect(entity['props']).to.have.key('and:maybe')
+    expect(entity['props']['with complex']).to.equal('property value')
+    expect(entity['props']['and:maybe']).to.equal('an0 ther @')
+
+  def test_it_should_parse_comments(self):
     result = parse("""
 # chatl is really easy to understand.
 #
@@ -190,6 +206,6 @@ class ParserTests(unittest.TestCase):
   twenty past five
 """)
 
-    self.assertEqual(1, len(result['intents']))
-    self.assertEqual(2, len(result['entities']))
-    self.assertEqual(2, len(result['synonyms']))
+    expect(result['intents']).to.have.length_of(1)
+    expect(result['entities']).to.have.length_of(2)
+    expect(result['synonyms']).to.have.length_of(2)

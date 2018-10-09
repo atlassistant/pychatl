@@ -20,6 +20,12 @@ setup(
   install_requires=[
     'Arpeggio==1.9.0',
   ],
+  extras_require={
+    'test': [
+      'nose==1.3.7',
+      'sure==1.4.11',
+    ],
+  },
   entry_points={
     'console_scripts': [
       'pychatl = pychatl.cli:main',

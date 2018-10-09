@@ -2,6 +2,6 @@ language: python
 python:
   - "3.6"
 install:
-  - pip install -e .
+  - pip install -e ."[test]"
 script:
-  - cd tests && python -m unittest -v
+  - python -m nose --with-doctest -v

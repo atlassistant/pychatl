@@ -118,16 +118,21 @@ Adapters
 
 For now, only the `snips adapter <https://github.com/snipsco/snips-nlu>`_ has been done. Here is a list of adapters and their respective properties:
 
-+---------+-------------------------------------------+------------------------------------------------------+
-| adapter | type *Specific type of the entity to use* | extensible *Are values outside of training allowed?* |
-+=========+===========================================+======================================================+
-| snips   | ✔️ with `snips:type`                      | ✔️                                                   |
-+---------+-------------------------------------------+------------------------------------------------------+
++--------------+----------------------+--+
+| adapter      | snips                |  |
++==============+======================+==+
+| type*        | ✔️ with `snips:type` |  |
++--------------+----------------------+--+
+| extensible** | ✔️                   |  |
++--------------+----------------------+--+
+
+* Specific type of the entity to use (such as datetime, temperature and so on)
+** Are values outside of training samples allowed?
 
 Testing
 -------
 
 .. code-block:: bash
 
-  $ cd tests/
-  $ python -m unittest -v
+  $ pip install -e .[test]
+  $ python -m nose --with-doctest -v
