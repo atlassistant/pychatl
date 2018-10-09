@@ -1,9 +1,9 @@
-import unittest
+from sure import expect
 from pychatl.utils import deep_update
 
-class UtilsTests(unittest.TestCase):
+class TestUtils:
 
-  def test_deep_update(self):
+  def test_it_should_be_able_to_deep_update_a_dict(self):
     a = {
       'language': 'en',
       'entities': {
@@ -37,6 +37,6 @@ class UtilsTests(unittest.TestCase):
 
     result = deep_update(a, b)
 
-    self.assertEqual('fr', result['language'])
-    self.assertFalse(result['entities']['room']['automatically_extensible'])
-    self.assertEqual(1, len(result['entities']['room']['data']))
+    expect(result['language']).to.equal('fr')
+    expect(result['entities']['room']['automatically_extensible']).to.be.false
+    expect(result['entities']['room']['data']).to.have.length_of(1)

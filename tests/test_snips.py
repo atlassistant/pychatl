@@ -1,15 +1,15 @@
-import unittest
+from sure import expect
 from pychatl import parse
 from pychatl.postprocess.snips import snips, is_builtin_entity
 
-class SnipsTests(unittest.TestCase):
+class TestSnips:
 
-  def test_is_builtin_entity(self):
-    self.assertTrue(is_builtin_entity('snips/datetime'))
-    self.assertFalse(is_builtin_entity('some_entity'))
-    self.assertFalse(is_builtin_entity(None))
+  def test_it_should_be_able_to_check_builtin_entity(self):
+    expect(is_builtin_entity('snips/datetime')).to.be.true
+    expect(is_builtin_entity('some_entity')).to.be.false
+    expect(is_builtin_entity(None)).to.be.false
 
-  def test_process_intents(self):
+  def test_it_should_process_intents(self):
     result = parse("""
 %[get_forecast]
   will it rain in @[city] on @[date]
@@ -34,44 +34,48 @@ class SnipsTests(unittest.TestCase):
 
     snips_data = snips(result)
 
-    self.assertEqual(1, len(snips_data['intents']))
-    self.assertTrue('get_forecast' in snips_data['intents'])
+    expect(snips_data['intents']).to.have.length_of(1)
+    expect(snips_data['intents']).to.have.key('get_forecast')
 
     intent = snips_data['intents']['get_forecast']
 
-    self.assertTrue('utterances' in intent)
+    expect(intent).to.have.key('utterances')
 
     utterances = intent['utterances']
 
-    self.assertEqual(3, len(utterances))
+    expect(utterances).to.have.length_of(3)
 
     data = utterances[0].get('data')
 
-    self.assertEqual(4, len(data))
-    self.assertEqual('will it rain in ', data[0].get('text'))
-    self.assertEqual('paris', data[1].get('text'))
-    self.assertEqual('city', data[1].get('slot_name'))
-    self.assertEqual('city', data[1].get('entity'))
-    self.assertEqual(' on ', data[2].get('text'))
-    self.assertEqual('tomorrow', data[3].get('text'))
-    self.assertEqual('date', data[3].get('slot_name'))
-    self.assertEqual('snips/datetime', data[3].get('entity'))
+    expect(data).to.have.length_of(4)
+    expect(data[0].get('text')).to.equal('will it rain in ')
+    expect(data[1].get('text')).to.equal('paris')
+    expect(data[1].get('slot_name')).to.equal('city')
+    expect(data[1].get('entity')).to.equal('city')
+    expect(data[2].get('text')).to.equal(' on ')
+    expect(data[3].get('text')).to.equal('tomorrow')
+    expect(data[3].get('slot_name')).to.equal('date')
+    expect(data[3].get('entity')).to.equal('snips/datetime')
 
     data = utterances[1].get('data')
 
-    self.assertEqual(3, len(data))
-    self.assertEqual('hi', data[0].get('text'))
-    self.assertEqual(" what's the weather like in ", data[1].get('text'))
-    self.assertEqual('new york', data[2].get('text'))
+    expect(data).to.have.length_of(3)
+    expect(data[0].get('text')).to.equal('hi')
+    expect(data[1].get('text')).to.equal(" what's the weather like in ")
+    expect(data[2].get('text')).to.equal('new york')
+    expect(data[2].get('slot_name')).to.equal('city')
+    expect(data[2].get('entity')).to.equal('city')
 
     data = utterances[2].get('data')
 
-    self.assertEqual(3, len(data))
-    self.assertEqual('hello', data[0].get('text'))
-    self.assertEqual(" what's the weather like in ", data[1].get('text'))
-    self.assertEqual('los angeles', data[2].get('text'))
-
-  def test_process_entities(self):
+    expect(data).to.have.length_of(3)
+    expect(data[0].get('text')).to.equal('hello')
+    expect(data[1].get('text')).to.equal(" what's the weather like in ")
+    expect(data[2].get('text')).to.equal('los angeles')
+    expect(data[2].get('slot_name')).to.equal('city')
+    expect(data[2].get('entity')).to.equal('city')
+  
+  def test_it_should_process_entities(self):
     result = parse("""
 @[city]
   paris
@@ -93,29 +97,35 @@ class SnipsTests(unittest.TestCase):
 
     snips_data = snips(result)
 
-    self.assertEqual(3, len(snips_data['entities']))
-    self.assertTrue('city' in snips_data['entities'])
+    expect(snips_data['entities']).to.have.length_of(3)
+    expect(snips_data['entities']).to.have.key('city')
 
     entity = snips_data['entities']['city']
 
-    self.assertTrue(entity['use_synonyms'])
-    self.assertTrue(entity['automatically_extensible'])
-    self.assertEqual(3, len(entity['data']))
-    self.assertEqual('new york', entity['data'][2]['value'])
-    self.assertEqual(2, len(entity['data'][2]['synonyms']))
-    self.assertEqual(['nyc', 'the big apple'], entity['data'][2]['synonyms'])
+    expect(entity['use_synonyms']).to.be.true
+    expect(entity['automatically_extensible']).to.be.true
+    
+    expect(entity['data']).to.have.length_of(3)
+    expect(entity['data'][0]['value']).to.equal('paris')
+    expect(entity['data'][1]['value']).to.equal('rouen')
+    expect(entity['data'][2]['value']).to.equal('new york')
+    expect(entity['data'][2]['synonyms']).to.have.length_of(2)
+    expect(entity['data'][2]['synonyms']).to.equal(['nyc', 'the big apple'])
 
-    self.assertTrue('room' in snips_data['entities'])
+    expect(snips_data['entities']).to.have.key('room')
+
     entity = snips_data['entities']['room']
-    self.assertFalse(entity['use_synonyms'])
-    self.assertFalse(entity['automatically_extensible'])
-    self.assertEqual(2, len(entity['data']))
 
-    self.assertFalse('date' in snips_data['entities'])
-    self.assertTrue('snips/datetime' in snips_data['entities'])
-    self.assertEqual({}, snips_data['entities']['snips/datetime'])
+    expect(entity['use_synonyms']).to.be.false
+    expect(entity['automatically_extensible']).to.be.false
+    
+    expect(entity['data']).to.have.length_of(2)
+    expect(snips_data['entities']).to_not.have.key('date')
+    expect(snips_data['entities']).to.have.key('snips/datetime')
 
-  def test_process_entities_with_variants(self):
+    expect(snips_data['entities']['snips/datetime']).to.be.empty
+  
+  def test_it_should_process_entities_with_variants(self):
     result = parse("""
 @[city]
   paris
@@ -133,16 +143,20 @@ class SnipsTests(unittest.TestCase):
 
     snips_data = snips(result)
 
-    self.assertEqual(1, len(snips_data['entities']))
-    self.assertTrue('city' in snips_data['entities'])
+    expect(snips_data['entities']).to.have.length_of(1)
+    expect(snips_data['entities']).to.have.key('city')
 
     entity = snips_data['entities']['city']
 
-    self.assertEqual(5, len(entity['data']))
+    expect(entity['data']).to.have.length_of(5)
+    expect(entity['use_synonyms']).to.be.true
+    expect(entity['automatically_extensible']).to.be.true
+    expect(entity['data'][2]['synonyms']).to.have.length_of(2)
+    expect(entity['data'][2]['synonyms']).to.equal(['nyc', 'the big apple'])
 
     data = [ d.get('value') for d in entity['data'] ]
 
-    self.assertEqual(['paris', 'rouen', 'new york', 'one variant', 'another one'], data)
+    expect(data).to.equal(['paris', 'rouen', 'new york', 'one variant', 'another one'])
 
   def test_process_options(self):
     result = parse("""
@@ -153,8 +167,8 @@ class SnipsTests(unittest.TestCase):
 
     snips_data = snips(result)
 
-    self.assertEqual('en', snips_data.get('language'))
+    expect(snips_data.get('language')).to.equal('en')
 
     snips_data = snips(result, language='fr')
 
-    self.assertEqual('fr', snips_data.get('language'))
+    expect(snips_data.get('language')).to.equal('fr')
