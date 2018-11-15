@@ -1,8 +1,11 @@
-pychatl |travis| |pypi| |license|
+pychatl |travis| |coveralls| |pypi| |license|
 =================================
 
 .. |travis| image:: https://travis-ci.org/atlassistant/pychatl.svg?branch=master
     :target: https://travis-ci.org/atlassistant/pychatl
+
+.. |coveralls| image:: https://coveralls.io/repos/github/atlassistant/pychatl/badge.svg?branch=master
+    :target: https://coveralls.io/github/atlassistant/pychatl?branch=master
 
 .. |pypi| image:: https://badge.fury.io/py/pychatl.svg
     :target: https://badge.fury.io/py/pychatl
