@@ -102,6 +102,7 @@ def snips(dataset, **options):
         'data': data,
         'use_synonyms': use_synonyms,
         'automatically_extensible': (props.get('extensible', 'true') == 'true'),
+        'matching_strictness': float(props.get('strictness', '1')),
       }
 
   # And then intents

@@ -128,9 +128,12 @@ For now, only the `snips adapter <https://github.com/snipsco/snips-nlu>`_ has be
 +-----------------+----------------------+
 | extensible (2)  | ✔️                   |
 +-----------------+----------------------+
+| strictness (3)  | ✔️                   |
++-----------------+----------------------+
 
 1. Specific type of the entity to use (such as datetime, temperature and so on)
 2. Are values outside of training samples allowed?
+3. Parser threshold
 
 Testing
 -------
@@ -138,4 +141,4 @@ Testing
 .. code-block:: bash
 
   $ pip install -e .[test]
-  $ python -m nose --with-doctest -v
+  $ python -m nose --with-doctest -v --with-coverage --cover-package=pychatl

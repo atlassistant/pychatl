@@ -82,7 +82,7 @@ class TestSnips:
   rouen
   ~[new york]
 
-@[room](extensible=false)
+@[room](extensible=false, strictness=0.8)
   kitchen
   bedroom
 
@@ -104,6 +104,7 @@ class TestSnips:
 
     expect(entity['use_synonyms']).to.be.true
     expect(entity['automatically_extensible']).to.be.true
+    expect(entity['matching_strictness']).to.equal(1.0)
     
     expect(entity['data']).to.have.length_of(3)
     expect(entity['data'][0]['value']).to.equal('paris')
@@ -118,6 +119,7 @@ class TestSnips:
 
     expect(entity['use_synonyms']).to.be.false
     expect(entity['automatically_extensible']).to.be.false
+    expect(entity['matching_strictness']).to.equal(0.8)
     
     expect(entity['data']).to.have.length_of(2)
     expect(snips_data['entities']).to_not.have.key('date')
