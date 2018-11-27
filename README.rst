@@ -93,7 +93,7 @@ From the code
 
   # Entities and intents can define arbitrary properties that will be made available
   # to generators.
-  # For snips, `snips:type` and `extensible` are used for example.
+  # For snips, `snips:type`, `extensible` and `strictness` are used for example.
 
   @[date](snips:type=snips/datetime)
     tomorrow
