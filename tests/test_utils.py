@@ -39,4 +39,13 @@ class TestUtils:
 
     expect(result['language']).to.equal('fr')
     expect(result['entities']['room']['automatically_extensible']).to.be.false
-    expect(result['entities']['room']['data']).to.have.length_of(1)
+
+    data = result['entities']['room']['data']
+    
+    expect(data).to.have.length_of(3)
+
+    room_names = [d['value'] for d in data]
+
+    expect(room_names).to.contain('kitchen')
+    expect(room_names).to.contain('bedroom')
+    expect(room_names).to.contain('living room')
