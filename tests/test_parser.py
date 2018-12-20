@@ -60,6 +60,7 @@ class TestParser:
 
     expect(result['entities']['anotherRoom']['props']).to.have.key('snips:type')
     expect(result['entities']['anotherRoom']['props']['snips:type']).to.equal('room')
+    expect(result['entities']['anotherRoom']['data']).to.be.empty
 
   def test_it_should_parse_entities(self):
     result = parse("""
