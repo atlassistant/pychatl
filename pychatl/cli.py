@@ -4,7 +4,7 @@ from pychatl.utils import deep_update
 import pychatl.postprocess as postprocess
 from .version import __version__
 
-def main():
+def main(): # pragma: no cover
   parser = argparse.ArgumentParser(description='Generates training dataset from a simple DSL.')
   parser.add_argument('--version', action='version', version='%(prog)s v' + __version__)
   parser.add_argument('files', type=str, nargs='+', help='One or more DSL files to process')
