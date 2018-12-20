@@ -1,21 +1,6 @@
 from itertools import product
 from ..utils import deep_update
-
-def is_builtin_entity(name):
-  """Checks if the given entity name is a builtin one.
-
-  Args:
-    name (str): Name of the entity
-  
-  Returns:
-    bool: True if it's one, false otherwise
-
-  """
-
-  if name:
-    return name.startswith('snips/')
-  
-  return False
+import logging
 
 def snips(dataset, **options):
 
@@ -25,9 +10,31 @@ def snips(dataset, **options):
   intents = dataset.get('intents', {})
   synonyms = dataset.get('synonyms', {})
 
+  def get_entity_type_backport(entity_props):
+    """Retrieve the entity type for given entity properties.
+
+    It also handle the soon to be obsolete nature of using the snips:type and
+    encourage you to use the type= syntax where you should leave the snips/ prefix away.
+
+    It will be added if the entity type can not be found in declared entities.
+    
+    """
+
+    prop_type = entity_props.get('type')
+    snips_type = entity_props.get('snips:type')
+
+    if snips_type:
+      prop_type = snips_type.replace('snips/', '')
+      logging.warning('snips:type has been replaced by type. You should now leave the snips/ prefix away when using it')
+
+    if prop_type and prop_type not in entities:
+      return 'snips/' + prop_type
+
+    return prop_type
+
   def get_entity_or_variant_value(entity, variant):
     ed = entities.get(entity, {})
-    prop_type = ed.get('props', {}).get('snips:type')
+    prop_type = get_entity_type_backport(ed.get('props', {}))
     
     # If it refers to another entity, use their values instead
     if prop_type in entities:
@@ -59,7 +66,7 @@ def snips(dataset, **options):
       return {
         'text': get_entity_or_variant_value(v, raw_data.get('variant')),
         'slot_name': v,
-        'entity': entities.get(v, {}).get('props', {}).get('snips:type', v),
+        'entity': get_entity_type_backport(entities.get(v, {}).get('props', {})) or v,
       }
 
     return {}
@@ -79,11 +86,9 @@ def snips(dataset, **options):
 
     entity_data = entity.get('data', []) + variants_data
     props = entity.get('props', {})
-    prop_type = props.get('snips:type')
+    prop_type = get_entity_type_backport(props)
 
-    if is_builtin_entity(prop_type):
-      training_dataset['entities'][prop_type] = {}
-    elif prop_type not in entities: # If prop type refer to another entity, do nothing
+    if not prop_type:
       data = []
       use_synonyms = False
 
@@ -111,6 +116,8 @@ def snips(dataset, **options):
         'automatically_extensible': (props.get('extensible', 'true') == 'true'),
         'matching_strictness': float(props.get('strictness', '1')),
       }
+    elif prop_type not in entities:
+      training_dataset['entities'][prop_type] = {}     
 
   # And then intents
   # For intents, we need to generate all permutations for synonyms

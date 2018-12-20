@@ -24,11 +24,11 @@ entity_definition = "@[" element_name "]" props? EOL
 
 intent_data = indent (entity_alias / synonym_alias / sentence)+ EOL?
 intent_definition = "%[" element_name "]" props? EOL
-  intent_data+
+  intent_data*
 
 synonym_data = indent sentence+ EOL?
 synonym_definition = "~[" element_name "]" props? EOL
-  synonym_data+
+  synonym_data*
 
 comment = "#" sentence? EOL?
 

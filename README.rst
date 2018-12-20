@@ -93,9 +93,11 @@ From the code
 
   # Entities and intents can define arbitrary properties that will be made available
   # to generators.
-  # For snips, `snips:type`, `extensible` and `strictness` are used for example.
+  # For snips, `type`, `extensible` and `strictness` are used for example.
+  # If the type value could not be found in the entities declaration, it will assume its a builtin one
+  # and on snips, it will prepend the 'snips/' automatically
 
-  @[date](snips:type=snips/datetime)
+  @[date](type=datetime)
     tomorrow
     today
 
@@ -124,14 +126,14 @@ For now, only the `snips adapter <https://github.com/snipsco/snips-nlu>`_ has be
 +-----------------+----------------------+
 | adapter         | snips                |
 +=================+======================+
-| type (1)        | ✔️ with `snips:type` |
+| type (1)        | ✔️                   |
 +-----------------+----------------------+
 | extensible (2)  | ✔️                   |
 +-----------------+----------------------+
 | strictness (3)  | ✔️                   |
 +-----------------+----------------------+
 
-1. Specific type of the entity to use (such as datetime, temperature and so on)
+1. Specific type of the entity to use (such as datetime, temperature and so on), if the given entity name could not be found in the chatl declaration, it will assume its a builtin one
 2. Are values outside of training samples allowed?
 3. Parser threshold
 

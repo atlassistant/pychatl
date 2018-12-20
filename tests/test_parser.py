@@ -51,15 +51,15 @@ class TestParser:
   kitchen
   bedroom
 
-@[anotherRoom](snips:type=room)
+@[anotherRoom](type=room)
 """)
 
     expect(result['entities']).to.have.length_of(2)
     expect(result['entities']).to.have.key('room')
     expect(result['entities']).to.have.key('anotherRoom')
 
-    expect(result['entities']['anotherRoom']['props']).to.have.key('snips:type')
-    expect(result['entities']['anotherRoom']['props']['snips:type']).to.equal('room')
+    expect(result['entities']['anotherRoom']['props']).to.have.key('type')
+    expect(result['entities']['anotherRoom']['props']['type']).to.equal('room')
     expect(result['entities']['anotherRoom']['data']).to.be.empty
 
   def test_it_should_parse_entities(self):

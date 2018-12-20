@@ -1,13 +1,23 @@
 from sure import expect
+from unittest.mock import patch
 from pychatl import parse
-from pychatl.postprocess.snips import snips, is_builtin_entity
+from pychatl.postprocess.snips import snips
 
 class TestSnips:
 
-  def test_it_should_be_able_to_check_builtin_entity(self):
-    expect(is_builtin_entity('snips/datetime')).to.be.true
-    expect(is_builtin_entity('some_entity')).to.be.false
-    expect(is_builtin_entity(None)).to.be.false
+  def test_it_should_allow_obsolete_declaration_of_type_for_now(self):
+    with patch('logging.warning') as mlog:
+      result = parse("""
+@[date](snips:type=snips/datetime)
+  tomorrow
+  """)
+
+      snips_data = snips(result)
+
+      expect(snips_data['entities']).to.have.key('snips/datetime')
+      expect(snips_data['entities']['snips/datetime']).to.be.empty
+
+      mlog.assert_called_once_with('snips:type has been replaced by type. You should now leave the snips/ prefix away when using it')
 
   def test_it_should_process_intents(self):
     result = parse("""
@@ -23,7 +33,7 @@ class TestSnips:
   new york
   los angeles
 
-@[date](snips:type=snips/datetime)
+@[date](type=datetime)
   tomorrow
 
 ~[greet]
@@ -84,7 +94,7 @@ class TestSnips:
   kitchen
   bedroom
 
-@[anotherRoom](snips:type=room)
+@[anotherRoom](type=room)
 """)
 
     snips_data = snips(result)
@@ -126,7 +136,7 @@ class TestSnips:
   kitchen
   bedroom
 
-@[date](snips:type=snips/datetime)
+@[date](type=datetime)
   tomorrow
   on tuesday
 
