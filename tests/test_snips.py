@@ -75,6 +75,46 @@ class TestSnips:
     expect(data[2].get('slot_name')).to.equal('city')
     expect(data[2].get('entity')).to.equal('city')
   
+  def test_it_should_process_empty_entities_which_refer_to_another_one(self):
+    result = parse("""
+%[my_intent]
+  we should go from @[room] to @[anotherRoom]
+
+@[room]
+  kitchen
+  bedroom
+
+@[anotherRoom](snips:type=room)
+""")
+
+    snips_data = snips(result)
+
+    expect(snips_data['entities']).to.have.length_of(1)
+    expect(snips_data['entities']).to.have.key('room')
+
+    expect(snips_data['intents']).to.have.length_of(1)
+    expect(snips_data['intents']).to.have.key('my_intent')
+
+    intent = snips_data['intents']['my_intent']
+
+    expect(intent).to.have.key('utterances')
+
+    utterances = intent['utterances']
+
+    expect(utterances).to.have.length_of(1)
+
+    data = utterances[0].get('data')
+
+    expect(data).to.have.length_of(4)
+    expect(data[0].get('text')).to.equal('we should go from ')
+    expect(data[1].get('slot_name')).to.equal('room')
+    expect(data[1].get('entity')).to.equal('room')
+    expect(data[1].get('text')).to.equal('kitchen')
+    expect(data[2].get('text')).to.equal(' to ')
+    expect(data[3].get('slot_name')).to.equal('anotherRoom')
+    expect(data[3].get('entity')).to.equal('room')
+    expect(data[3].get('text')).to.equal('bedroom')
+
   def test_it_should_process_entities(self):
     result = parse("""
 @[city]

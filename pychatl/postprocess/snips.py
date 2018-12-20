@@ -26,12 +26,19 @@ def snips(dataset, **options):
   synonyms = dataset.get('synonyms', {})
 
   def get_entity_or_variant_value(entity, variant):
+    ed = entities.get(entity, {})
+    prop_type = ed.get('props', {}).get('snips:type')
+    
+    # If it refers to another entity, use their values instead
+    if prop_type in entities:
+      entity = prop_type
+      ed = entities.get(entity, {})
+
+    d = ed.get('data', [])
     key = entity + (variant or '')
 
-    d = entities.get(entity, {}).get('data', [])
-
     if variant:
-      d = entities.get(entity, {}).get('variants', {}).get(variant, [])
+      d = ed.get('variants', {}).get(variant, [])
 
     if key not in entities_idx or entities_idx[key] >= (len(d) - 1):
       entities_idx[key] = 0
@@ -76,7 +83,7 @@ def snips(dataset, **options):
 
     if is_builtin_entity(prop_type):
       training_dataset['entities'][prop_type] = {}
-    else:
+    elif prop_type not in entities: # If prop type refer to another entity, do nothing
       data = []
       use_synonyms = False
 

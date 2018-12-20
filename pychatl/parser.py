@@ -20,7 +20,7 @@ props = "(" prop+ ")"
 
 entity_data = indent (synonym_alias / sentence) EOL?
 entity_definition = "@[" element_name "]" props? EOL
-  entity_data+
+  entity_data*
 
 intent_data = indent (entity_alias / synonym_alias / sentence)+ EOL?
 intent_definition = "%[" element_name "]" props? EOL

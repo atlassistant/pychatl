@@ -45,6 +45,22 @@ class TestParser:
     expect(data[2]['value']).to.equal('city')
     expect(data[2]['variant']).to.equal('variant')
   
+  def test_it_should_parse_empty_entities(self):
+    result = parse("""
+@[room]
+  kitchen
+  bedroom
+
+@[anotherRoom](snips:type=room)
+""")
+
+    expect(result['entities']).to.have.length_of(2)
+    expect(result['entities']).to.have.key('room')
+    expect(result['entities']).to.have.key('anotherRoom')
+
+    expect(result['entities']['anotherRoom']['props']).to.have.key('snips:type')
+    expect(result['entities']['anotherRoom']['props']['snips:type']).to.equal('room')
+
   def test_it_should_parse_entities(self):
     result = parse("""
 @[city](some=prop, something=else)
