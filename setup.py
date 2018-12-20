@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-with open('README.rst', encoding='utf8') as f:
+with open('README.rst', encoding='utf-8') as f:
   readme = f.read()
 
 with open('pychatl/version.py') as f:
@@ -17,6 +17,9 @@ setup(
   license='GPL-3.0',
   packages=find_packages(),
   include_package_data=True,
+  classifiers=[
+    "Programming Language :: Python :: 3",
+  ],
   install_requires=[
     'Arpeggio==1.9.0',
   ],
