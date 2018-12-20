@@ -2,6 +2,8 @@ from itertools import product
 from ..utils import deep_update
 import logging
 
+SNIPS_PREFIX = 'snips/'
+
 def snips(dataset, **options):
 
   entities_idx = {}
@@ -24,11 +26,11 @@ def snips(dataset, **options):
     snips_type = entity_props.get('snips:type')
 
     if snips_type:
-      prop_type = snips_type.replace('snips/', '')
+      prop_type = snips_type.replace(SNIPS_PREFIX, '')
       logging.warning('snips:type has been replaced by type. You should now leave the snips/ prefix away when using it')
 
-    if prop_type and prop_type not in entities:
-      return 'snips/' + prop_type
+    if prop_type and prop_type not in entities and SNIPS_PREFIX not in prop_type:
+      return SNIPS_PREFIX + prop_type
 
     return prop_type
 
