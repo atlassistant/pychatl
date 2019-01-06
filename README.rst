@@ -13,6 +13,8 @@ pychatl |travis| |coveralls| |pypi| |license|
 .. |license| image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg
     :target: https://www.gnu.org/licenses/gpl-3.0
 
+⚠️ pychatl is now part of the base repo `chatl <https://github.com/atlassistant/chatl>`_, so development will continue there!
+
 Tiny DSL to generate training dataset for NLU engines. Based on the javascript implementation of `chatl <https://github.com/atlassistant/chatl>`_.
 
 Installation
